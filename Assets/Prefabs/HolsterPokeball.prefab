@@ -542,7 +542,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeab6e9d6efd1164fb1461e63b46bc0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instaCatch: 0
+  instaCatch: 1
   catchRate: 1
   animHeight: 1.5
   animSpeed: 1.2
@@ -580,6 +580,7 @@ MonoBehaviour:
   currentSlot: {fileID: 0}
   retrieveRange: 10
   battleStartRadius: 2
+  parentBone: {fileID: 0}
 --- !u!1773428102 &-5281123774345806351
 ParentConstraint:
   m_ObjectHideFlags: 0

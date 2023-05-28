@@ -9,6 +9,7 @@ TagManager:
   - Pokeball
   - RightHand
   - LeftHand
+  - Tree
   layers:
   - Default
   - TransparentFX

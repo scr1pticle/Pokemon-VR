@@ -200,6 +200,9 @@ MonoBehaviour:
   OnRetrieve:
     m_PersistentCalls:
       m_Calls: []
+  OnDeath:
+    m_PersistentCalls:
+      m_Calls: []
   UI: {fileID: 641631869839266608}
   expScale: {fileID: 4961699406976107306}
   isCatchable: 0
@@ -1215,7 +1218,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7658943390767565649}
   - component: {fileID: 5925822604718789173}
-  - component: {fileID: 641631870125604315}
+  - component: {fileID: 965775701392551156}
   m_Layer: 8
   m_Name: Eevee
   m_TagString: Pokemon
@@ -1330,8 +1333,8 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.04769507, y: -0.0000058561563, z: -0.07338275}
     m_Extent: {x: 0.32614, y: 0.30201238, z: 0.2510512}
   m_DirtyAABB: 0
---- !u!64 &641631870125604315
-MeshCollider:
+--- !u!136 &965775701392551156
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1340,10 +1343,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -5086043245935418659, guid: 0eaba0442408ac440be9bfc6e8f7ee8c, type: 3}
+  m_Radius: 0.30201888
+  m_Height: 0.654661
+  m_Direction: 1
+  m_Center: {x: -0.000004005376, y: 0.061769336, z: 0.2394006}
 --- !u!1 &5555159233709904190
 GameObject:
   m_ObjectHideFlags: 0

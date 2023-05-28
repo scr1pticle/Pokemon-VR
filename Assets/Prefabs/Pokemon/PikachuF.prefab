@@ -688,7 +688,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2053356505332256287}
   - component: {fileID: 1841294148614178999}
-  - component: {fileID: 426362687}
+  - component: {fileID: 435697987084793115}
   m_Layer: 8
   m_Name: PikachuF
   m_TagString: Pokemon
@@ -797,8 +797,8 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.14113621, y: -0.0000014454126, z: -0.11569664}
     m_Extent: {x: 0.35040915, y: 0.24935524, z: 0.33440018}
   m_DirtyAABB: 0
---- !u!64 &426362687
-MeshCollider:
+--- !u!136 &435697987084793115
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -807,10 +807,10 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -4465783125971242680, guid: d25a4d54c60f22d4d8fbe2fb74c05f82, type: 3}
+  m_Radius: 0.17
+  m_Height: 0.71
+  m_Direction: 2
+  m_Center: {x: -0.00000088677916, y: -0.02, z: 0.33200687}
 --- !u!1 &4106437535186293765
 GameObject:
   m_ObjectHideFlags: 0

@@ -64,7 +64,7 @@ public class Pokemon : MonoBehaviour
     private int nextLevelExp = 0;
     public Dictionary<Stat, int> Stats { get; private set; } = new();
 
-    private Dictionary<Stat, int> baseStats = new();
+    public Dictionary<Stat, int> baseStats = new();
     private Dictionary<Stat, int> IVs = new();
     private Dictionary<Stat, int> EVs = new();
 
@@ -86,6 +86,8 @@ public class Pokemon : MonoBehaviour
     private List<PokemonMove> moves = new();
 
     public bool isOwned = false;
+    public bool isOwnedByTrainer = false;
+    public Trainer trainerOwner;
     public bool inBattle = false;
 
     public UnityEvent OnCaptureAttempt;
@@ -104,7 +106,6 @@ public class Pokemon : MonoBehaviour
     public TextMeshProUGUI lvlText;
 
     public Animator animator;
-    public GameObject inventoryPrefab;
     private NavMeshAgent _agent;
     private GameObject _player;
 
@@ -157,6 +158,12 @@ public class Pokemon : MonoBehaviour
     private void Caught()
     {
         Player.inst.AddPokemon(this);
+        PokemonManager.inst.wildPokemons.Remove(this);
+    }
+
+    private void OnDestroy()
+    {
+        PokemonManager.inst.wildPokemons.Remove(this);
     }
 
     private void Update()
@@ -172,6 +179,7 @@ public class Pokemon : MonoBehaviour
     {
         if (isOwned)
         {
+            print("yes");
             if (Vector3.Distance(transform.position, _player.transform.position) > playerFollowDistance && !_agent.hasPath)
             {
                 if (!_agent.isOnNavMesh) return;
@@ -228,7 +236,7 @@ public class Pokemon : MonoBehaviour
     public void SetIdleAnimation(bool state = true)
     {
         _agent.enabled = !state;
-        if(!state)
+        if(state)
             animationState = pokemonAnimState.EndlessIdle;
         else 
             animationState = pokemonAnimState.Idle;
@@ -310,6 +318,7 @@ public class Pokemon : MonoBehaviour
             nextLevelExp = Mathf.CeilToInt(4f * (Mathf.Pow(_level, 3) / 5f));
         }
         UpdateLevel();
+        PokemonManager.inst.UpdateLevel();
         CalculateStats();
     }
 
@@ -321,7 +330,7 @@ public class Pokemon : MonoBehaviour
         UpdateLevel();
         CalculateStats();
     }
-
+    
     private void UpdateLevel()
     {
         lvlText.text = $"Lvl {_level}";

@@ -15,6 +15,17 @@ public class Health : MonoBehaviour
 
     public UnityEvent OnFaint;
 
+    private void Start()
+    {
+        OnFaint.AddListener(Faint);
+    }
+
+    private void Faint()
+    {
+        if (GetComponent<Pokemon>().isOwned) return;
+        PokemonManager.inst.wildPokemons.Remove(GetComponent<Pokemon>());
+    }
+
     public void SetHealth(int hp)
     {
         maxHealth = _health = hp;
@@ -33,7 +44,7 @@ public class Health : MonoBehaviour
 
     public void Heal(int hpPercent)
     {
-        _health += Mathf.RoundToInt(maxHealth*(float)(hpPercent/100));
+        _health += Mathf.RoundToInt(maxHealth*(float)hpPercent/100);
         _health = Mathf.Clamp(_health, 0, maxHealth);
         UpdateHealthbar();
     }

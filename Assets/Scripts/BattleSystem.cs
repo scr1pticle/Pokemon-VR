@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
@@ -95,6 +96,12 @@ public class BattleSystem : MonoBehaviour
         battleMenu.SetActive(false);
     }
 
+    private void Update()
+    {
+        if (_enemyPokemon == null) return;
+        print(_enemyPokemon.GetComponent<Pokemon>().name + ": " + _enemyPokemon.GetComponent<Health>().GetHealth());
+    }
+
     private void Run()
     {
         if (state != BattleState.Pause) return;
@@ -104,6 +111,7 @@ public class BattleSystem : MonoBehaviour
 
     public void StartBattle(GameObject allyPokemon, GameObject enemyPokemon)
     {
+        print(allyPokemon + " : " + enemyPokemon);
         runButton.SetActive(false);
         _allyPokemon = allyPokemon;
         _enemyPokemon = enemyPokemon;
@@ -209,13 +217,13 @@ public class BattleSystem : MonoBehaviour
                 if (move.Status.targetSelf)
                 {
                     _enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat] += move.Status.stageChange;
-                    Mathf.Clamp(_enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
+                    _enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat] = Mathf.Clamp(_enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
                     dialogue = Regex.Replace(dialogue, @"Pokemon", _enemyPokemon.GetComponent<Pokemon>().name); 
                 }
                 else 
                 {
                     _allyPokemon.GetComponent<Pokemon>().Stages[affectedStat] += move.Status.stageChange;
-                    Mathf.Clamp(_allyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
+                    _allyPokemon.GetComponent<Pokemon>().Stages[affectedStat] = Mathf.Clamp(_allyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
                     dialogue = Regex.Replace(stageChangeLookup[move.Status.stageChange], @"Pokemon", _allyPokemon.GetComponent<Pokemon>().name);
                 }
                 dialogue = Regex.Replace(dialogue, @"stat", affectedStat.ToString().ToLower());
@@ -261,13 +269,13 @@ public class BattleSystem : MonoBehaviour
                 if (move.Status.targetSelf)
                 {
                     _allyPokemon.GetComponent<Pokemon>().Stages[affectedStat] += move.Status.stageChange;
-                    Mathf.Clamp(_allyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
+                    _allyPokemon.GetComponent<Pokemon>().Stages[affectedStat] = Mathf.Clamp(_allyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
                     dialogue = Regex.Replace(dialogue, @"Pokemon", _allyPokemon.GetComponent<Pokemon>().name);
                 }
                 else
                 {
                     _enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat] += move.Status.stageChange;
-                    Mathf.Clamp(_enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
+                    _enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat] = Mathf.Clamp(_enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
                     dialogue = Regex.Replace(stageChangeLookup[move.Status.stageChange], @"Pokemon", _enemyPokemon.GetComponent<Pokemon>().name);
                 }
                 dialogue = Regex.Replace(dialogue, @"stat", affectedStat.ToString().ToLower());
@@ -301,6 +309,7 @@ public class BattleSystem : MonoBehaviour
 
     private int CalculateDamage(Pokemon attacker, Pokemon defender, PokemonMove move)
     {
+        criticalHitThreshold = Convert.ToByte(attacker.baseStats[Stat.Speed] / 2);
         int critical = Random.Range(0, 255) < criticalHitThreshold ? 2 : 1;
         float stab = attacker.type.Contains(move.Type) ? 1.5f : 1;
         float Type1 = GetTypeEffectivness(move.Type, defender.type[0]);
@@ -317,6 +326,7 @@ public class BattleSystem : MonoBehaviour
         dialogueText.text = $"{_allyPokemon.GetComponent<Pokemon>().name} fainted!";
         Vector3 startScale = _allyPokemon.transform.localScale;
         float current = 0;
+        print("ally faint");
         while (current < 1)
         {
             current = Mathf.MoveTowards(current, 1, faintSpeed * Time.deltaTime);
@@ -355,6 +365,7 @@ public class BattleSystem : MonoBehaviour
         Vector3 startScale = _enemyPokemon.transform.localScale;
         float current = 0;
         _enemyPokemon.GetComponent<Pokemon>().OnDeath.Invoke();
+        print("enemy faint");
         while(current < 1)
         {
             current = Mathf.MoveTowards(current, 1, faintSpeed * Time.deltaTime);
@@ -375,8 +386,8 @@ public class BattleSystem : MonoBehaviour
             allyPokemon.GetXP(exp);
             dialogueText.text = $"{enemyPokemon.name} fainted. {allyPokemon.name} gained {exp} experience!";
             Destroy(_enemyPokemon);
-            PokemonManager.inst.AddPokemonCount(-1);
             allyPokemon.Battle(false);
+            ResetPP(allyPokemon);
             ResetStages(allyPokemon);
         }
         else if(state == BattleState.Lose)
@@ -387,8 +398,11 @@ public class BattleSystem : MonoBehaviour
             enemyPokemon.OnBreakFree.RemoveAllListeners();
             enemyPokemon.Battle(false);
             enemyPokemon.GetComponent<Health>().Heal(100);
+            ResetPP(allyPokemon);
+            ResetPP(enemyPokemon);
             ResetStages(allyPokemon);
             ResetStages(enemyPokemon);
+            if (enemyPokemon.isOwnedByTrainer) enemyPokemon.trainerOwner.BackToTrainer();
         }
         else if(state == BattleState.Captured)
         {
@@ -397,6 +411,8 @@ public class BattleSystem : MonoBehaviour
             enemyPokemon.OnBreakFree.RemoveAllListeners();
             allyPokemon.Battle(false);
             enemyPokemon.Battle(false);
+            ResetPP(allyPokemon);
+            ResetPP(enemyPokemon);
             ResetStages(allyPokemon);
             ResetStages(enemyPokemon);
         }
@@ -417,6 +433,14 @@ public class BattleSystem : MonoBehaviour
         foreach (var key in pokemon.Stages.Keys.ToList())
         {
             pokemon.Stages[key] = 0;
+        }
+    }
+
+    private void ResetPP(Pokemon pokemon)
+    {
+        foreach (var item in pokemon.GetMoves())
+        {
+            item.CurrentPP = item.PP;
         }
     }
 

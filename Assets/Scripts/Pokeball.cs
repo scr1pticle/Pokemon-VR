@@ -5,6 +5,7 @@ using UnityEngine.XR.Interaction.Toolkit;
 using Random = UnityEngine.Random;
 using DG.Tweening;
 using UnityEngine.AI;
+using Unity.VisualScripting;
 
 public enum PokeballType
 {
@@ -63,6 +64,8 @@ public class Pokeball : MonoBehaviour
     private GameObject enemyPokemon = null;
 
     private Dictionary<Vector2, int> lookupB = new();
+
+    public GameObject startContainedPokemon;
     
     void Start()
     {
@@ -72,6 +75,31 @@ public class Pokeball : MonoBehaviour
         laser.enabled = false;
         interactable = GetComponent<XRGrabInteractable>();
         interactable.selectEntered.AddListener(GrabBegin);
+        if (startContainedPokemon != null) SetStartPokemon();
+    }
+
+    public void SetStartPokemon()
+    {
+        containedPokemon = Instantiate(startContainedPokemon, transform.position, transform.rotation, transform);
+        isContainingPokemon = true;
+        containedPokemon.GetComponent<Animator>().enabled = false;
+        containedPokemon.GetComponent<NavMeshAgent>().enabled = false;
+        containedPokemon.GetComponent<Pokemon>().ResetBones();
+        startPokemonScale = containedPokemon.transform.localScale;
+        containedPokemon.transform.localScale = Vector3.zero;
+        containedPokemon.SetActive(false);
+    }
+
+    public void SetStartPokemon(GameObject pokemonPb)
+    {
+        containedPokemon = Instantiate(pokemonPb, transform.position, transform.rotation, transform);
+        isContainingPokemon = true;
+        containedPokemon.GetComponent<Animator>().enabled = false;
+        containedPokemon.GetComponent<NavMeshAgent>().enabled = false;
+        containedPokemon.GetComponent<Pokemon>().ResetBones();
+        startPokemonScale = containedPokemon.transform.localScale;
+        containedPokemon.transform.localScale = Vector3.zero;
+        containedPokemon.SetActive(false);
     }
 
     public void RetrievePokemon()
@@ -154,7 +182,7 @@ public class Pokeball : MonoBehaviour
         }
         else
         {
-            if (collision.transform.CompareTag("Ground"))
+            if (collision.transform.CompareTag("Ground") && !inSlot)
             {
                 var pokemonInRange = Physics.OverlapSphere(transform.position, battleStartRadius);
                 DebugExtension.DebugWireSphere(transform.position, battleStartRadius, 10);
@@ -218,7 +246,7 @@ public class Pokeball : MonoBehaviour
         }
         for (int i = 0; i < 3; i++)
         {
-            if (ShakeCheck(b))
+            if (!ShakeCheck(b))
             {
                 BreakFree(i);
                 yield break;
@@ -323,7 +351,6 @@ public class Pokeball : MonoBehaviour
 
             containedPokemon.transform.LookAt(new Vector3(look.transform.position.x, transform.position.y, look.transform.position.z));
         }
-            
         containedPokemon.SetActive(true);
         
         var current = 0f;
@@ -359,6 +386,14 @@ public class Pokeball : MonoBehaviour
     public GameObject GetContainedPokemon()
     {
         return containedPokemon;
+    }
+
+    public void Release()
+    {
+        transform.rotation = transform.parent.transform.rotation;
+        transform.parent = null;
+        rb.useGravity = true;
+        rb.AddForce(transform.forward * 200);
     }
 
     private void SetupLookupB()

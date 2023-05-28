@@ -11,7 +11,10 @@ public enum PokemonMoveEnum
     QuickAttack,
     SweetKiss,
     ThunderShock,
-    Scratch
+    Scratch,
+    Revenge,
+    LowKick,
+    Leer
 }
 
 public enum MoveEffects
@@ -20,6 +23,7 @@ public enum MoveEffects
     Attack,
     Defense,
     Special,
+    Critical,
     Confused,
     Paralyze
 }
@@ -213,3 +217,38 @@ public class Scratch : PokemonMove
     public override int Accuracay { get { return 100; } }
 }
 
+public class Leer : PokemonMove
+{
+    public override string Name { get { return "Leer"; } }
+    public override string DisplayName { get { return Name; } }
+    public override MoveCategory Category { get { return MoveCategory.Status; } }
+    public override Status Status { get { return new Status(MoveEffects.Defense, -1); } }
+    public override PokemonType Type { get { return PokemonType.Normal; } }
+    public override int PP { get { return 30; } }
+    public override int CurrentPP { get; set; }
+    public override int Accuracay { get { return 100; } }
+}
+
+public class LowKick : PokemonMove
+{
+    public override string Name { get { return "LowKick"; } }
+    public override string DisplayName { get { return "Low Kick"; } }
+    public override MoveCategory Category { get { return MoveCategory.Physical; } }
+    public override PokemonType Type { get { return PokemonType.Fighting; } }
+    public override int Power { get { return 30; } }
+    public override int PP { get { return 20; } }
+    public override int CurrentPP { get; set; }
+    public override int Accuracay { get { return 100; } }
+}
+
+public class Revenge : PokemonMove
+{
+    public override string Name { get { return "Revenge"; } }
+    public override string DisplayName { get { return Name; } }
+    public override MoveCategory Category { get { return MoveCategory.Physical; } }
+    public override PokemonType Type { get { return PokemonType.Fighting; } }
+    public override int Power { get { return 60; } }
+    public override int PP { get { return 10; } }
+    public override int CurrentPP { get; set; }
+    public override int Accuracay { get { return 100; } }
+}
