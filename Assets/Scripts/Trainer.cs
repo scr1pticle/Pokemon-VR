@@ -14,8 +14,8 @@ public class Trainer : MonoBehaviour
     private void Start()
     {
         entrance.onTeleport.AddListener(delegate { Invoke(nameof(Entered), 2); } );
+        BackToTrainer();
     }
-
     private void Entered()
     {
         GetComponent<Animator>().SetTrigger("Throw");
@@ -27,7 +27,8 @@ public class Trainer : MonoBehaviour
 
     public void BackToTrainer()
     {
-        pokeball = Instantiate(pokeball, pokeballParent.position, pokeballParent.rotation, pokeballParent);
-        pokeball.GetComponent<Pokeball>().SetStartPokemon(pokemonPb);
+        pokeball = Instantiate(pokeballPb, pokeballParent.position, pokeballParent.rotation, pokeballParent);
+        pokeball.GetComponent<Rigidbody>().useGravity = false;
+        pokeball.GetComponent<Pokeball>().SetStartPokemon(pokemonPb, this);
     }
 }

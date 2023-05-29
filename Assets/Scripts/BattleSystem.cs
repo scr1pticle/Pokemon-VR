@@ -385,6 +385,7 @@ public class BattleSystem : MonoBehaviour
             int exp = enemyPokemon.expYield * enemyPokemon.GetLevel() / 7;
             allyPokemon.GetXP(exp);
             dialogueText.text = $"{enemyPokemon.name} fainted. {allyPokemon.name} gained {exp} experience!";
+            _allyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
             Destroy(_enemyPokemon);
             allyPokemon.Battle(false);
             ResetPP(allyPokemon);
@@ -393,6 +394,8 @@ public class BattleSystem : MonoBehaviour
         else if(state == BattleState.Lose)
         {
             dialogueText.text = "You lost";
+            _allyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
+            _enemyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
             enemyPokemon.OnCapture.RemoveAllListeners();
             enemyPokemon.OnCaptureAttempt.RemoveAllListeners();
             enemyPokemon.OnBreakFree.RemoveAllListeners();
@@ -402,10 +405,12 @@ public class BattleSystem : MonoBehaviour
             ResetPP(enemyPokemon);
             ResetStages(allyPokemon);
             ResetStages(enemyPokemon);
-            if (enemyPokemon.isOwnedByTrainer) enemyPokemon.trainerOwner.BackToTrainer();
+            if (enemyPokemon.isOwnedByTrainer) StartCoroutine(PokemonBackToTrainer());
         }
         else if(state == BattleState.Captured)
         {
+            _allyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
+            _enemyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
             enemyPokemon.OnCapture.RemoveAllListeners();
             enemyPokemon.OnCaptureAttempt.RemoveAllListeners();
             enemyPokemon.OnBreakFree.RemoveAllListeners();
@@ -427,6 +432,18 @@ public class BattleSystem : MonoBehaviour
         }
     }
 
+    private IEnumerator PokemonBackToTrainer()
+    {
+        float current = 0f;
+        while (current < 1)
+        {
+            current = Mathf.MoveTowards(current, 1, faintSpeed * Time.deltaTime);
+            _enemyPokemon.transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, current);
+            yield return null;
+        }
+        Destroy(_enemyPokemon);
+        _enemyPokemon.GetComponent<Pokemon>().trainerOwner.BackToTrainer();
+    }
     private void ResetStages(Pokemon pokemon)
     {
         if (pokemon == null) return;

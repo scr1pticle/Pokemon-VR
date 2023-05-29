@@ -75,7 +75,7 @@ public class Pokeball : MonoBehaviour
         laser.enabled = false;
         interactable = GetComponent<XRGrabInteractable>();
         interactable.selectEntered.AddListener(GrabBegin);
-        if (startContainedPokemon != null) SetStartPokemon();
+        //if (startContainedPokemon != null) SetStartPokemon();
     }
 
     public void SetStartPokemon()
@@ -90,7 +90,7 @@ public class Pokeball : MonoBehaviour
         containedPokemon.SetActive(false);
     }
 
-    public void SetStartPokemon(GameObject pokemonPb)
+    public void SetStartPokemon(GameObject pokemonPb, Trainer trainer)
     {
         containedPokemon = Instantiate(pokemonPb, transform.position, transform.rotation, transform);
         isContainingPokemon = true;
@@ -99,7 +99,9 @@ public class Pokeball : MonoBehaviour
         containedPokemon.GetComponent<Pokemon>().ResetBones();
         startPokemonScale = containedPokemon.transform.localScale;
         containedPokemon.transform.localScale = Vector3.zero;
+        containedPokemon.GetComponent<Pokemon>().trainerOwner = trainer;
         containedPokemon.SetActive(false);
+       
     }
 
     public void RetrievePokemon()
@@ -352,7 +354,7 @@ public class Pokeball : MonoBehaviour
             containedPokemon.transform.LookAt(new Vector3(look.transform.position.x, transform.position.y, look.transform.position.z));
         }
         containedPokemon.SetActive(true);
-        
+        containedPokemon.GetComponent<AudioSource>().PlayOneShot(containedPokemon.GetComponent<Pokemon>().releaseSound);
         var current = 0f;
         while (current < 1)
         {

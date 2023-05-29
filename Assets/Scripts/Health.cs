@@ -34,10 +34,11 @@ public class Health : MonoBehaviour
     public void TakeDamage(int dmg)
     {
         _health -= dmg;
-        if(_health <= 0)
+        if (_health <= 0)
         {
             _health = 0;
             OnFaint.Invoke();
+            print(GetComponent<Pokemon>().name + "invoked OnFaint");
         }
         UpdateHealthbar();
     }

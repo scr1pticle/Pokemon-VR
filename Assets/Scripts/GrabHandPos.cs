@@ -37,7 +37,7 @@ public class GrabHandPos : MonoBehaviour
         }
         else if(arg.interactorObject is XRRayInteractor)
         {
-            HandData handData = arg.interactorObject.transform.parent.GetComponentInChildren<HandData>();
+            HandData handData = arg.interactorObject.transform.GetComponentInChildren<HandData>().deriveFrom;
             handData.animator.enabled = false;
             SetHandDataValues(handData, rightHandPose);
             SetHandData(handData, finalHandPos, finalHandRotation, finalFingerRotations);
@@ -55,10 +55,10 @@ public class GrabHandPos : MonoBehaviour
         }
         else if (arg.interactorObject is XRRayInteractor)
         {
-            HandData handData = arg.interactorObject.transform.parent.GetComponentInChildren<HandData>();
-            handData.animator.enabled = false;
-            SetHandDataValues(handData, rightHandPose);
-            SetHandData(handData, finalHandPos, finalHandRotation, finalFingerRotations);
+            HandData handData = arg.interactorObject.transform.GetComponentInChildren<HandData>().deriveFrom;
+            handData.animator.enabled = true;
+
+            SetHandData(handData, startHandPos, finalHandRotation, finalFingerRotations);
         }
     }
 
@@ -82,7 +82,6 @@ public class GrabHandPos : MonoBehaviour
 
     public void SetHandData(HandData h, Vector3 newPosition, Quaternion newRotation, Quaternion[] newBonesRotation)
     {
-        //h.root.localPosition = newPosition;
         h.root.localRotation = newRotation;
 
         for (int i = 0; i < newBonesRotation.Length; i++)

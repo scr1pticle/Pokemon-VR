@@ -359,6 +359,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: RegularPokeBall
       objectReference: {fileID: 0}
+    - target: {fileID: 3175040253068366369, guid: 365e61b11fc9cec47bb3c755b7a468bb,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 365e61b11fc9cec47bb3c755b7a468bb, type: 3}
@@ -1131,6 +1136,11 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: EnableSideMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 6996117904375268976, guid: 318f234837a5ad6428aaba049b538a3f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6996117904677728128, guid: 318f234837a5ad6428aaba049b538a3f,
         type: 3}
       propertyPath: m_Name
@@ -1582,7 +1592,7 @@ GameObject:
   - component: {fileID: 235721847}
   - component: {fileID: 235721849}
   - component: {fileID: 235721848}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Attack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1717,7 +1727,7 @@ GameObject:
   m_Component:
   - component: {fileID: 240274707}
   - component: {fileID: 240274708}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Stats
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2245,7 +2255,7 @@ GameObject:
   - component: {fileID: 324130821}
   - component: {fileID: 324130823}
   - component: {fileID: 324130822}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Speed
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3031,7 +3041,7 @@ GameObject:
   - component: {fileID: 466347818}
   - component: {fileID: 466347820}
   - component: {fileID: 466347819}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3106,7 +3116,7 @@ GameObject:
   m_Component:
   - component: {fileID: 470851129}
   - component: {fileID: 470851130}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: SideMenu
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3183,6 +3193,7 @@ GameObject:
   - component: {fileID: 488779465}
   - component: {fileID: 488779466}
   - component: {fileID: 488779467}
+  - component: {fileID: 488779468}
   m_Layer: 3
   m_Name: XR Origin
   m_TagString: Player
@@ -3383,6 +3394,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2081ee0d453c0014eafc13abc8bf6c0b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &488779468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 488779458}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd92454e719eda2418f405a1c5139ca6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rightDirectInteractor: {fileID: 285116714}
+  leftDirectInteractor: {fileID: 1689033778}
+  rightGrabRayInteractor: {fileID: 1537999000}
+  leftGrabRayInteractor: {fileID: 752742012}
+  rightUIRayInteractor: {fileID: 1079348102}
+  leftUIRayInteractor: {fileID: 1265901394}
 --- !u!1 &522938635
 GameObject:
   m_ObjectHideFlags: 0
@@ -3394,7 +3423,7 @@ GameObject:
   - component: {fileID: 522938636}
   - component: {fileID: 522938638}
   - component: {fileID: 522938637}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3484,6 +3513,134 @@ MonoBehaviour:
   entrance: {fileID: 802914286}
   pokemonPb: {fileID: 6168469438638021870, guid: 775792c52a09f8d4ea8c1b2e61170213,
     type: 3}
+--- !u!1 &581197416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 581197418}
+  - component: {fileID: 581197417}
+  m_Layer: 0
+  m_Name: MusicManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!82 &581197417
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581197416}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 4893d4c1916d2d447825b69c201a4d64, type: 3}
+  m_PlayOnAwake: 1
+  m_Volume: 0.622
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 43.46
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 1
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!4 &581197418
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581197416}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 137.5, y: 2.34, z: 121.6}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 22
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &582654380
 GameObject:
   m_ObjectHideFlags: 0
@@ -3979,7 +4136,7 @@ GameObject:
   m_Component:
   - component: {fileID: 680051122}
   - component: {fileID: 680051123}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4233,7 +4390,7 @@ GameObject:
   - component: {fileID: 689618222}
   - component: {fileID: 689618224}
   - component: {fileID: 689618223}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Name
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4444,7 +4601,7 @@ GameObject:
   - component: {fileID: 699237157}
   - component: {fileID: 699237159}
   - component: {fileID: 699237158}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4579,7 +4736,7 @@ GameObject:
   - component: {fileID: 727501968}
   - component: {fileID: 727501970}
   - component: {fileID: 727501969}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Special
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4717,7 +4874,7 @@ GameObject:
   - component: {fileID: 747042249}
   - component: {fileID: 747042251}
   - component: {fileID: 747042250}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BG (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4803,6 +4960,7 @@ GameObject:
   - component: {fileID: 752742011}
   - component: {fileID: 752742010}
   - component: {fileID: 752742009}
+  - component: {fileID: 752742014}
   m_Layer: 0
   m_Name: Left Grab Ray
   m_TagString: LeftHand
@@ -5384,6 +5542,23 @@ MonoBehaviour:
     m_Reference: {fileID: 7779212132400271959, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
   m_ButtonPressPoint: 0.5
+--- !u!114 &752742014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 752742007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48307d24350005847b9698b61ada5091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deriveFrom: {fileID: 1421051340}
+  handType: 0
+  root: {fileID: 0}
+  fingerBones: []
+  animator: {fileID: 0}
 --- !u!4 &754613865 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 327458620062425082, guid: 365e61b11fc9cec47bb3c755b7a468bb,
@@ -5548,6 +5723,18 @@ MeshCollider:
   m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!114 &818735028 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 139490136, guid: 1fd3a7c43c8190f4d8c167ebde694364,
+    type: 3}
+  m_PrefabInstance: {fileID: 80930388}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 818735023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48307d24350005847b9698b61ada5091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -5716,6 +5903,11 @@ PrefabInstance:
     - target: {fileID: 1034063015, guid: 318f234837a5ad6428aaba049b538a3f, type: 3}
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: Slot, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 6996117904375268976, guid: 318f234837a5ad6428aaba049b538a3f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 6996117904677728128, guid: 318f234837a5ad6428aaba049b538a3f,
         type: 3}
@@ -6184,7 +6376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1031896689}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PokemonHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -6225,6 +6417,11 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 62586444}
+    - target: {fileID: 6996117904375268976, guid: 318f234837a5ad6428aaba049b538a3f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6996117904677728128, guid: 318f234837a5ad6428aaba049b538a3f,
         type: 3}
       propertyPath: m_Name
@@ -7348,7 +7545,7 @@ GameObject:
   - component: {fileID: 1140408371}
   - component: {fileID: 1140408373}
   - component: {fileID: 1140408372}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8628,7 +8825,7 @@ GameObject:
   - component: {fileID: 1410108545}
   - component: {fileID: 1410108547}
   - component: {fileID: 1410108546}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -8752,6 +8949,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410108544}
   m_CullTransparentMesh: 1
+--- !u!114 &1421051340 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2127418994, guid: 65847589f926b734d9eaed6e25f0046b,
+    type: 3}
+  m_PrefabInstance: {fileID: 75166191}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48307d24350005847b9698b61ada5091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1424427059 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4523795863874790511, guid: dbfad60b1f977ba49a4c4263371a93df,
@@ -9085,7 +9294,10 @@ MonoBehaviour:
   walkInterval: {x: 5, y: 9}
   playerFollowDistance: 1.5
   playerStoppingDistance: 0.6
+  audio: {fileID: 0}
+  releaseSound: {fileID: 8300000, guid: efb7fdf3633a6b74b9f7dbee0cbf9ec6, type: 3}
   boneOrigin: {fileID: 6895275789414044187}
+  startLevel: 1
   isOwned: 0
   isOwnedByTrainer: 0
   trainerOwner: {fileID: 0}
@@ -9182,7 +9394,7 @@ GameObject:
   - component: {fileID: 1537534429}
   - component: {fileID: 1537534431}
   - component: {fileID: 1537534430}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9320,6 +9532,7 @@ GameObject:
   - component: {fileID: 1537998999}
   - component: {fileID: 1537998998}
   - component: {fileID: 1537998997}
+  - component: {fileID: 1537999002}
   m_Layer: 0
   m_Name: Right Grab Ray
   m_TagString: RightHand
@@ -9901,6 +10114,23 @@ MonoBehaviour:
     m_Reference: {fileID: 875253871413052681, guid: c348712bda248c246b8c49b3db54643f,
       type: 3}
   m_ButtonPressPoint: 0.5
+--- !u!114 &1537999002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537998995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48307d24350005847b9698b61ada5091, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  deriveFrom: {fileID: 818735028}
+  handType: 0
+  root: {fileID: 0}
+  fingerBones: []
+  animator: {fileID: 0}
 --- !u!1 &1564984992
 GameObject:
   m_ObjectHideFlags: 0
@@ -10854,7 +11084,7 @@ GameObject:
   - component: {fileID: 1798804997}
   - component: {fileID: 1798804996}
   - component: {fileID: 1798804998}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11089,7 +11319,7 @@ GameObject:
   - component: {fileID: 1814513194}
   - component: {fileID: 1814513196}
   - component: {fileID: 1814513195}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11197,7 +11427,7 @@ GameObject:
   - component: {fileID: 1856888420}
   - component: {fileID: 1856888422}
   - component: {fileID: 1856888421}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Value
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11331,7 +11561,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1893717369}
   - component: {fileID: 1893717370}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Types
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11394,7 +11624,7 @@ GameObject:
   - component: {fileID: 1903876594}
   - component: {fileID: 1903876596}
   - component: {fileID: 1903876595}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Level
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11740,7 +11970,7 @@ GameObject:
   - component: {fileID: 1939978827}
   - component: {fileID: 1939978829}
   - component: {fileID: 1939978828}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Defense
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -11876,7 +12106,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1946221191}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12146,7 +12376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2124841963}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: PokemonSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12777,7 +13007,7 @@ GameObject:
   - component: {fileID: 1038049357507940051}
   - component: {fileID: 1038049357507940050}
   - component: {fileID: 1038049357507940049}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12795,7 +13025,7 @@ GameObject:
   - component: {fileID: 1038049358577932106}
   - component: {fileID: 1038049358577932116}
   - component: {fileID: 1038049358577932107}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -12871,7 +13101,7 @@ GameObject:
   - component: {fileID: 1038049358756462733}
   - component: {fileID: 1038049358756462735}
   - component: {fileID: 1038049358756462734}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: bg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -13214,7 +13444,7 @@ GameObject:
   - component: {fileID: 1781876418853895317}
   - component: {fileID: 1781876418853895307}
   - component: {fileID: 1781876418853895306}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: Exp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14428,7 +14658,7 @@ GameObject:
   - component: {fileID: 4781437418074732951}
   - component: {fileID: 4781437418074732949}
   - component: {fileID: 4781437418074732950}
-  m_Layer: 8
+  m_Layer: 5
   m_Name: HealthNum
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14845,6 +15075,11 @@ PrefabInstance:
       propertyPath: m_Delegates.Array.data[0].callback.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: EnableSideMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 6996117904375268976, guid: 318f234837a5ad6428aaba049b538a3f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 6996117904677728128, guid: 318f234837a5ad6428aaba049b538a3f,
         type: 3}
       propertyPath: m_Name
@@ -15069,6 +15304,7 @@ GameObject:
   - component: {fileID: 1487821616}
   - component: {fileID: 1487821622}
   - component: {fileID: 1487821621}
+  - component: {fileID: 7587576546565903250}
   m_Layer: 8
   m_Name: PikachuF (1)
   m_TagString: Pokemon
@@ -15429,6 +15665,102 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!82 &7587576546565903250
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7063803688876575019}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 0.851
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &7859023414903113892
 Transform:
   m_ObjectHideFlags: 0

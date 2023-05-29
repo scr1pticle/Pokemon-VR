@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
@@ -51,7 +52,7 @@ public class baseStatsInspector
     public int val;
 }
 
-//[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(AudioSource))]
 public class Pokemon : MonoBehaviour
 {
     [Header("Pokemon stats")]
@@ -75,12 +76,18 @@ public class Pokemon : MonoBehaviour
     public Vector2 walkInterval = new Vector2(5f, 8f);
     public float playerFollowDistance = 1.5f;
     public float playerStoppingDistance = 0.6f;
+    [HideInInspector]
+    public AudioSource audio;
+    [Header("Audio")]
+    public AudioClip releaseSound;
+
     private float _timer = 0;
     public Transform boneOrigin;
     private List<Transform> _bones = new();
     private List<Vector3> _boneStartPosition = new();
     private List<Quaternion> _boneStartRotation = new();
 
+    public int startLevel = 1;
     private int _level = 1;
 
     private List<PokemonMove> moves = new();
@@ -129,6 +136,7 @@ public class Pokemon : MonoBehaviour
     }
     private void Start()
     {
+        audio = GetComponent<AudioSource>();
         OnCapture.AddListener(Caught);
         _timer = Random.Range(walkInterval.x, walkInterval.y);
         foreach (var item in boneOrigin.GetComponentsInChildren<Transform>())
@@ -148,7 +156,7 @@ public class Pokemon : MonoBehaviour
             moves.Add((PokemonMove)Activator.CreateInstance(type));
             moves[i].CurrentPP = moves[i].PP;
         }
-       
+        _level = startLevel;
         lvlText.text =  $"Lvl {_level}";
         nextLevelExp = 6;
         
@@ -263,7 +271,7 @@ public class Pokemon : MonoBehaviour
             animator.SetBool("isIdle", true);
             animator.SetBool("isWalking", false);
         }
-        else
+        else if(gameObject.activeSelf)
         {
             animationState = pokemonAnimState.Idle;
             _agent.enabled = true;
