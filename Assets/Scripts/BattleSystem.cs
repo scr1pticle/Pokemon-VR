@@ -46,7 +46,8 @@ public class BattleSystem : MonoBehaviour
     public byte criticalHitThreshold;
     public float faintSpeed = 2;
     public float timeBetweenDialogues;
-
+    [Header("SFX")]
+    public List<AudioClip> hitSounds;
     private BattleState state;
     private GameObject _allyPokemon;
     private GameObject _enemyPokemon;
@@ -116,6 +117,14 @@ public class BattleSystem : MonoBehaviour
         _allyPokemon = allyPokemon;
         _enemyPokemon = enemyPokemon;
         _allyPokemon.GetComponent<Health>().OnFaint.AddListener(delegate { StartCoroutine(AllyFaint()); });
+        _allyPokemon.GetComponent<Pokemon>().OnHit.AddListener(delegate {
+            _enemyPokemon.GetComponent<AudioSource>().PlayOneShot(hitSounds[Random.Range(0, hitSounds.Count)]);
+            _enemyPokemon.GetComponent<Pokemon>().hitParticleSystem.Play();
+        });
+        _enemyPokemon.GetComponent<Pokemon>().OnHit.AddListener(delegate {
+            _allyPokemon.GetComponent<AudioSource>().PlayOneShot(hitSounds[Random.Range(0, hitSounds.Count)]);
+            _allyPokemon.GetComponent<Pokemon>().hitParticleSystem.Play();
+        });
         _enemyPokemon.GetComponent<Health>().OnFaint.AddListener(delegate { StartCoroutine(EnemyFaint()); });
         _enemyPokemon.GetComponent<Pokemon>().OnCaptureAttempt.AddListener(CaptureAttempt);
         _enemyPokemon.GetComponent<Pokemon>().OnCapture.AddListener(Capture);
@@ -247,7 +256,10 @@ public class BattleSystem : MonoBehaviour
         var enemy = _enemyPokemon.GetComponent<Pokemon>();
         dialogueText.text = $"{ally.name} used {move.Name}";
         if (move.Category == MoveCategory.Physical)
+        {
             ally.animator.SetTrigger("PhysAttack");
+        }
+            
         move.CurrentPP--;
         if (move.CurrentPP <= 0) button.interactable = false;
         button.gameObject.GetComponent<MoveButton>().ppText.text = $"{move.CurrentPP}/{move.PP}";
@@ -386,6 +398,7 @@ public class BattleSystem : MonoBehaviour
             allyPokemon.GetXP(exp);
             dialogueText.text = $"{enemyPokemon.name} fainted. {allyPokemon.name} gained {exp} experience!";
             _allyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
+            allyPokemon.OnHit.RemoveAllListeners();
             Destroy(_enemyPokemon);
             allyPokemon.Battle(false);
             ResetPP(allyPokemon);
@@ -399,6 +412,7 @@ public class BattleSystem : MonoBehaviour
             enemyPokemon.OnCapture.RemoveAllListeners();
             enemyPokemon.OnCaptureAttempt.RemoveAllListeners();
             enemyPokemon.OnBreakFree.RemoveAllListeners();
+            enemyPokemon.OnHit.RemoveAllListeners();
             enemyPokemon.Battle(false);
             enemyPokemon.GetComponent<Health>().Heal(100);
             ResetPP(allyPokemon);
@@ -410,10 +424,12 @@ public class BattleSystem : MonoBehaviour
         else if(state == BattleState.Captured)
         {
             _allyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
+            allyPokemon.OnHit.RemoveAllListeners();
             _enemyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
             enemyPokemon.OnCapture.RemoveAllListeners();
             enemyPokemon.OnCaptureAttempt.RemoveAllListeners();
             enemyPokemon.OnBreakFree.RemoveAllListeners();
+            enemyPokemon.OnHit.RemoveAllListeners();
             allyPokemon.Battle(false);
             enemyPokemon.Battle(false);
             ResetPP(allyPokemon);

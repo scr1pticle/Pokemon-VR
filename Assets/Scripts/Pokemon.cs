@@ -63,6 +63,10 @@ public class Pokemon : MonoBehaviour
     public int expYield;
     private int exp = 0;
     private int nextLevelExp = 0;
+
+    [Header("VFX")]
+    public ParticleSystem hitParticleSystem;
+    public ParticleSystem releaseParticleSystem;
     public Dictionary<Stat, int> Stats { get; private set; } = new();
 
     public Dictionary<Stat, int> baseStats = new();
@@ -100,6 +104,7 @@ public class Pokemon : MonoBehaviour
     public UnityEvent OnCaptureAttempt;
     public UnityEvent OnCapture;
     public UnityEvent<int> OnBreakFree;
+    public UnityEvent OnHit;
 
     public UnityEvent OnRetrieve;
 
@@ -130,7 +135,6 @@ public class Pokemon : MonoBehaviour
         }
         foreach (var item in baseStatsInspector)
         {
-            //baseStats[item.key] = item.val;
             baseStats.Add(item.key, item.val);
         }
     }
@@ -161,6 +165,11 @@ public class Pokemon : MonoBehaviour
         nextLevelExp = 6;
         
         CalculateStats();
+    }
+
+    public void Hit()
+    {
+        OnHit.Invoke();
     }
 
     private void Caught()

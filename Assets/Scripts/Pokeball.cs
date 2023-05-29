@@ -39,6 +39,7 @@ public class Pokeball : MonoBehaviour
     public float laserDeploySpeed = 2;
     public float shakeDuration = 0.7f;
     public float intervalBetweenShakes = 1.5f;
+    public float pokemonReleaseSpeed = 2;
     [HideInInspector]
     public bool isContainingPokemon = false;
     [Header("Slot")]
@@ -48,6 +49,16 @@ public class Pokeball : MonoBehaviour
     public float retrieveRange;
 
     public float battleStartRadius;
+    [Header("Effects")]
+    public ParticleSystem catchVFX;
+    [Header("Audio")]
+    public AudioClip shakeCheckSound;
+    public AudioClip pickUpSound;
+    public AudioClip pokemonCaughtSound;
+    public AudioClip catchingPokemon;
+    public AudioClip pokemonBreakFree;
+    public AudioClip pokemonReturn;
+    private AudioSource _audio;
 
     private bool active = true;
     private Rigidbody rb;
@@ -67,8 +78,10 @@ public class Pokeball : MonoBehaviour
 
     public GameObject startContainedPokemon;
     
+
     void Start()
     {
+        _audio = GetComponent<AudioSource>();
         SetupLookupB();
         rb = GetComponent<Rigidbody>();
         laser = GetComponent<LineRenderer>();
@@ -112,13 +125,27 @@ public class Pokeball : MonoBehaviour
             {
                 if (!hit.transform.root.GetComponent<Pokemon>().isOwned || isContainingPokemon || hit.transform.root.GetComponent<Pokemon>().inBattle) return;
                 pokemon = hit.transform.root.GetComponent<Pokemon>().gameObject;
+                _audio.PlayOneShot(pokemonReturn);
                 StartCoroutine(CapturePokemon(true));
             }
         }
     }
 
+    private IEnumerator OpenPokeball()
+    {
+        float current = 0;
+        Quaternion starRot = transform.rotation;
+        while (current < 1)
+        {
+            current = Mathf.MoveTowards(current, 1, animSpeed * Time.deltaTime);
+            pokeballTop.transform.localRotation = Quaternion.Lerp(Quaternion.identity, Quaternion.Euler(-75, 0, 0), current);
+            yield return null;
+        }
+    }
+
     public void GrabBegin(SelectEnterEventArgs arg)
     {
+        _audio.PlayOneShot(pickUpSound);
         if (inSlot)
         {
             foreach (var item in GetComponentsInChildren<SkinnedMeshRenderer>())
@@ -147,20 +174,18 @@ public class Pokeball : MonoBehaviour
                     int a = CalculateA();
                     if (instaCatch) a = 255;
                     int rand = Random.Range(0, 256);
-                    print(a + " | " + rand);
                     if (rand <= a)
                     {
-                        containedPokemon.GetComponent<Pokemon>().isOwned = true;
-                        containedPokemon.SetActive(false);
-                        isContainingPokemon = true;
-                        //rb.constraints = RigidbodyConstraints.None;
-                        containedPokemon.GetComponent<Pokemon>().OnCapture.Invoke();
-                        interactable.enabled = true;
+                        StartCoroutine(DelayedPokemonCapture());
                     }
                     else
                     {
                         StartCoroutine(Shake(a));
                     }
+                }
+                else
+                {
+                    StartCoroutine(SelfDestruct());
                 }
             }
             if (collision.transform.CompareTag("Pokemon") && active)
@@ -177,6 +202,7 @@ public class Pokeball : MonoBehaviour
                     targetPos = collision.GetContact(0).point + new Vector3(collision.GetContact(0).normal.x * animHeight, Mathf.Clamp(Mathf.Abs(collision.GetContact(0).normal.x), 0.5f, 1f) * animHeight, collision.GetContact(0).normal.y * animHeight);
                     targetRot = Quaternion.LookRotation(collision.transform.position - targetPos, Vector3.up);
                     pokemon.GetComponent<Pokemon>().OnCaptureAttempt.Invoke();
+                    _audio.PlayOneShot(catchingPokemon);
                     interactable.enabled = false;
                     StartCoroutine(Animate());
                 }
@@ -219,6 +245,31 @@ public class Pokeball : MonoBehaviour
         }
     }
 
+    private IEnumerator DelayedPokemonCapture()
+    {
+        yield return new WaitForSeconds(intervalBetweenShakes);
+        containedPokemon.GetComponent<Pokemon>().isOwned = true;
+        containedPokemon.SetActive(false);
+        isContainingPokemon = true;
+        _audio.PlayOneShot(pokemonCaughtSound);
+        catchVFX.Play();
+        containedPokemon.GetComponent<Pokemon>().OnCapture.Invoke();
+        interactable.enabled = true;
+    }
+
+    private IEnumerator SelfDestruct()
+    {
+        interactable.enabled = false;
+        yield return new WaitForSeconds(5);
+        var current = 1f;
+        while(current > 0) 
+        {
+            current = Mathf.MoveTowards(current, 0, 2*Time.deltaTime);
+            transform.localScale = new Vector3(current, current, current);
+            yield return null;
+        }
+        Destroy(gameObject);
+    }
     private void BreakFree(int count)
     {
         pokemon.GetComponent<Pokemon>().OnBreakFree.Invoke(count);
@@ -255,6 +306,7 @@ public class Pokeball : MonoBehaviour
             }
             else
             {
+                _audio.PlayOneShot(shakeCheckSound);
                 yield return transform.DOShakeRotation(shakeDuration, new Vector3(20, 40, 20), 10, 90, true, ShakeRandomnessMode.Full).WaitForCompletion();
                 yield return new WaitForSeconds(intervalBetweenShakes);
             }
@@ -262,7 +314,8 @@ public class Pokeball : MonoBehaviour
         pokemon.GetComponent<Pokemon>().isOwned = true;
         pokemon.SetActive(false);
         isContainingPokemon = true;
-        //rb.constraints = RigidbodyConstraints.None;
+        _audio.PlayOneShot(pokemonCaughtSound);
+        catchVFX.Play();
         pokemon.GetComponent<Pokemon>().OnCapture.Invoke();
         interactable.enabled = true;
     }
@@ -293,6 +346,7 @@ public class Pokeball : MonoBehaviour
         {
             current = Mathf.MoveTowards(current, 1, laserDeploySpeed * Time.deltaTime);
             laser.SetPosition(1, Vector3.Lerp(laser.GetPosition(1), pokemon.transform.position, current));
+            laser.SetPosition(0, transform.position);
             yield return null;
         }
 
@@ -304,8 +358,10 @@ public class Pokeball : MonoBehaviour
             current = Mathf.MoveTowards(current, 1, pokemonCaptureSpeed * Time.deltaTime);
             pokemon.transform.position = Vector3.Lerp(startPos, transform.position, current);
             pokemon.transform.localScale = Vector3.Lerp(startPokemonScale, Vector3.zero, current);
-            pokeballTop.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(-75, 0, 0), Quaternion.identity, current);
+            if(!retrieve)
+                pokeballTop.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(-75, 0, 0), Quaternion.identity, current);
             laser.SetPosition(1, pokemon.transform.position);
+            laser.SetPosition(0, transform.position);
             yield return null;
         }
         
@@ -334,6 +390,7 @@ public class Pokeball : MonoBehaviour
 
     private IEnumerator ReleasePokemon()
     {
+        _audio.PlayOneShot(pokemonBreakFree);
         containedPokemon.transform.parent = null;
         transform.GetComponent<Collider>().enabled = false;
         if(Physics.Raycast(containedPokemon.transform.position, Vector3.down, out var hit))
@@ -354,11 +411,12 @@ public class Pokeball : MonoBehaviour
             containedPokemon.transform.LookAt(new Vector3(look.transform.position.x, transform.position.y, look.transform.position.z));
         }
         containedPokemon.SetActive(true);
+        containedPokemon.GetComponent<Pokemon>().releaseParticleSystem.Play();
         containedPokemon.GetComponent<AudioSource>().PlayOneShot(containedPokemon.GetComponent<Pokemon>().releaseSound);
         var current = 0f;
         while (current < 1)
         {
-            current = Mathf.MoveTowards(current, 1, pokemonCaptureSpeed * Time.deltaTime);
+            current = Mathf.MoveTowards(current, 1, pokemonReleaseSpeed * Time.deltaTime);
             containedPokemon.transform.localScale = Vector3.Lerp(Vector3.zero, startPokemonScale, current);
             yield return null;
         }
