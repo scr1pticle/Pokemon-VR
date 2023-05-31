@@ -14,6 +14,7 @@ public class PokemonWeight
 public class PokemonManager : MonoBehaviour
 {
     public static PokemonManager inst;
+
     public int wildPokemonAmount;
     public float spawnRange;
     public List<PokemonWeight> pokemonPrefabs;
@@ -27,18 +28,21 @@ public class PokemonManager : MonoBehaviour
         if (inst == null) inst = this;
         else Destroy(this);
     }
-    void Start()
+    /*void Start()
+    {
+        *//*foreach (var item in pokemonPrefabs)
+        {
+            _pokemonsWeights[item.key] = item.val;
+        }*//*
+        SpawnPokemons();
+    }*/
+
+    public void SpawnPokemons()
     {
         foreach (var item in pokemonPrefabs)
         {
             _pokemonsWeights[item.key] = item.val;
         }
-        SpawnPokemons();
-    }
-
-    private void SpawnPokemons()
-    {
-        //activePokemons.RemoveAll(s => s == null);
         int[] weights = _pokemonsWeights.Values.ToArray();
         
         while(wildPokemons.Count < wildPokemonAmount)

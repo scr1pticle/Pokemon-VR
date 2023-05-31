@@ -5463,6 +5463,7 @@ MonoBehaviour:
   catchingPokemon: {fileID: 8300000, guid: 057c9c2a2aa2792489b7ff383d4c95d9, type: 3}
   pokemonBreakFree: {fileID: 8300000, guid: 48e33c39cb3731a478edc8e6f4744063, type: 3}
   pokemonReturn: {fileID: 8300000, guid: 8aebbc82844ab324694a46714f6c2539, type: 3}
+  audio: {fileID: -9025679354460862303}
   startContainedPokemon: {fileID: 0}
 --- !u!1773428102 &-5281123774345806351
 ParentConstraint:

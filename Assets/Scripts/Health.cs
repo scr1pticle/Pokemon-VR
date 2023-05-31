@@ -38,7 +38,6 @@ public class Health : MonoBehaviour
         {
             _health = 0;
             OnFaint.Invoke();
-            print(GetComponent<Pokemon>().name + "invoked OnFaint");
         }
         UpdateHealthbar();
     }

@@ -7,13 +7,13 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public static Player inst;
+    public AudioListener audioListener;
     private List<Pokemon> _partyPokemon = new();
     private void Awake()
     {
         if (inst == null) inst = this;
         else Destroy(this);
     }
-
     public void AddPokemon(Pokemon pokemon)
     {
         _partyPokemon.Add(pokemon);

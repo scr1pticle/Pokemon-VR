@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
@@ -14,6 +15,8 @@ public class Inventory : MonoBehaviour
     public GameObject inventory;
     public SideMenu sideMenu;
     public InputActionProperty showButton;
+
+    public UnityEvent OnOpen;
 
     private List<Slot> slots;
 
@@ -33,6 +36,7 @@ public class Inventory : MonoBehaviour
         if (showButton.action.WasPressedThisFrame())
         {
             inventory.SetActive(!inventory.activeSelf);
+            if(inventory.activeSelf) OnOpen.Invoke();
             foreach (var item in slots)
             {
                 if (item.itemInSlot != null)

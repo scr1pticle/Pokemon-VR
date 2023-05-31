@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 using DG.Tweening;
 using UnityEngine.AI;
 using Unity.VisualScripting;
+using UnityEngine.Events;
 
 public enum PokeballType
 {
@@ -77,7 +78,6 @@ public class Pokeball : MonoBehaviour
     private Dictionary<Vector2, int> lookupB = new();
 
     public GameObject startContainedPokemon;
-    
 
     void Start()
     {
@@ -103,6 +103,18 @@ public class Pokeball : MonoBehaviour
         containedPokemon.SetActive(false);
     }
 
+    public void SetStartPokemon(GameObject pokemonPb)
+    {
+        containedPokemon = Instantiate(pokemonPb, transform.position, transform.rotation, transform);
+        isContainingPokemon = true;
+        containedPokemon.GetComponent<Animator>().enabled = false;
+        containedPokemon.GetComponent<NavMeshAgent>().enabled = false;
+        containedPokemon.GetComponent<Pokemon>().ResetBones();
+        startPokemonScale = containedPokemon.transform.localScale;
+        containedPokemon.transform.localScale = Vector3.zero;
+        containedPokemon.SetActive(false);
+
+    }
     public void SetStartPokemon(GameObject pokemonPb, Trainer trainer)
     {
         containedPokemon = Instantiate(pokemonPb, transform.position, transform.rotation, transform);
@@ -168,6 +180,7 @@ public class Pokeball : MonoBehaviour
         {
             if (collision.transform.CompareTag("Ground"))
             {
+                if(!instaCatch)
                 active = false;
                 if (containedPokemon != null)
                 {
@@ -183,7 +196,7 @@ public class Pokeball : MonoBehaviour
                         StartCoroutine(Shake(a));
                     }
                 }
-                else
+                else if(!instaCatch)
                 {
                     StartCoroutine(SelfDestruct());
                 }
@@ -212,6 +225,19 @@ public class Pokeball : MonoBehaviour
         {
             if (collision.transform.CompareTag("Ground") && !inSlot)
             {
+                if(containedPokemon.GetComponent<Health>().GetHealth() <= 0 && containedPokemon.GetComponent<Pokemon>().isOwned)
+                {
+                    foreach (var item in Inventory.inst.GetSlots())
+                    {
+                        if (item.itemInSlot == null)
+                        {
+                            item.InsertItem(gameObject);
+                            gameObject.SetActive(false);
+                            return;
+                        }
+                    }
+                }
+                
                 var pokemonInRange = Physics.OverlapSphere(transform.position, battleStartRadius);
                 DebugExtension.DebugWireSphere(transform.position, battleStartRadius, 10);
                 if (pokemonInRange.Length > 0)
@@ -240,6 +266,7 @@ public class Pokeball : MonoBehaviour
                         }
                     } while (false);
                 }
+                print("releasing");
                 StartCoroutine(ReleasePokemon());
             }
         }
@@ -371,7 +398,8 @@ public class Pokeball : MonoBehaviour
         pokemon.transform.forward = transform.forward;
         pokemon.transform.localRotation = Quaternion.identity;
         containedPokemon = pokemon;
-        pokemon.GetComponent<Animator>().enabled = false;
+        if (pokemon.GetComponent<Pokemon>().animator != null)
+            pokemon.GetComponent<Animator>().enabled = false;
         pokemon.GetComponent<NavMeshAgent>().enabled = false;
         pokemon.GetComponent<Pokemon>().ResetBones();
         if (retrieve)
@@ -390,8 +418,10 @@ public class Pokeball : MonoBehaviour
 
     private IEnumerator ReleasePokemon()
     {
+        print("called release");
         _audio.PlayOneShot(pokemonBreakFree);
         containedPokemon.transform.parent = null;
+        containedPokemon.GetComponent<Pokemon>().OnRelease.Invoke();
         transform.GetComponent<Collider>().enabled = false;
         if(Physics.Raycast(containedPokemon.transform.position, Vector3.down, out var hit))
         {
@@ -420,9 +450,13 @@ public class Pokeball : MonoBehaviour
             containedPokemon.transform.localScale = Vector3.Lerp(Vector3.zero, startPokemonScale, current);
             yield return null;
         }
-        containedPokemon.GetComponent<Animator>().enabled = true;
+        if(containedPokemon.GetComponent<Pokemon>().animator != null) 
+        {
+            containedPokemon.GetComponent<Animator>().enabled = true;
+        }
         containedPokemon.GetComponent<Pokemon>().SetIdleAnimation(false);
         containedPokemon.GetComponent<NavMeshAgent>().enabled = !containedPokemon.GetComponent<Pokemon>().inBattle;
+        print("released");
         Destroy(gameObject);
     }
 

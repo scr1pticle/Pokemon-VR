@@ -107,6 +107,7 @@ public class Pokemon : MonoBehaviour
     public UnityEvent OnHit;
 
     public UnityEvent OnRetrieve;
+    public UnityEvent OnRelease;
 
     public UnityEvent OnDeath;
 
@@ -120,6 +121,8 @@ public class Pokemon : MonoBehaviour
     public Animator animator;
     private NavMeshAgent _agent;
     private GameObject _player;
+
+    public bool alwaysIdle;
 
     [HideInInspector]
     public pokemonAnimState animationState;
@@ -137,6 +140,7 @@ public class Pokemon : MonoBehaviour
         {
             baseStats.Add(item.key, item.val);
         }
+        _agent = GetComponent<NavMeshAgent>();
     }
     private void Start()
     {
@@ -149,11 +153,8 @@ public class Pokemon : MonoBehaviour
             _boneStartPosition.Add(item.localPosition);
             _boneStartRotation.Add(item.localRotation);
         }
-        animator = GetComponent<Animator>();
         animationState = pokemonAnimState.Idle;
-        _agent = GetComponent<NavMeshAgent>();
         _player = GameObject.FindGameObjectWithTag("Player");
-        
         for (int i = 0; i < movesEnum.Count; i++)
         {
             Type type = Type.GetType(movesEnum[i].ToString());
@@ -185,6 +186,15 @@ public class Pokemon : MonoBehaviour
 
     private void Update()
     {
+        if(animator == null)
+        {
+            switch (animationState)
+            {
+                case pokemonAnimState.Idle: Idle(); break;
+                case pokemonAnimState.Walking: Walking(); break;
+            }
+            return;
+        }
         if (!animator.enabled || !animator.gameObject.activeSelf) return;
         switch (animationState)
         {
@@ -194,6 +204,7 @@ public class Pokemon : MonoBehaviour
     }
     private void Idle()
     {
+        if (alwaysIdle) return;
         if (isOwned)
         {
             print("yes");
@@ -201,8 +212,11 @@ public class Pokemon : MonoBehaviour
             {
                 if (!_agent.isOnNavMesh) return;
                 animationState = pokemonAnimState.Walking;
-                animator.SetBool("isIdle", false);
-                animator.SetBool("isWalking", true);
+                if(animator != null)
+                {
+                    animator.SetBool("isIdle", false);
+                    animator.SetBool("isWalking", true);
+                }
                 _agent.SetDestination(_player.transform.position);
             }
         }
@@ -212,8 +226,12 @@ public class Pokemon : MonoBehaviour
             {
                 if (!_agent.isOnNavMesh) return;
                 animationState = pokemonAnimState.Walking;
-                animator.SetBool("isIdle", false);
-                animator.SetBool("isWalking", true);
+                if(animator != null)
+                {
+                    animator.SetBool("isIdle", false);
+                    animator.SetBool("isWalking", true);
+                }
+                
                 do
                 {
                     _agent.SetDestination(new Vector3(transform.position.x + Random.Range(-2, 2), 0, transform.position.z + Random.Range(-2, 2)));
@@ -224,6 +242,15 @@ public class Pokemon : MonoBehaviour
     }
     private void Walking()
     {
+        if (alwaysIdle) {
+            animationState = pokemonAnimState.Idle;
+            if(animator != null)
+            {
+                animator.SetBool("isWalking", false);
+                animator.SetBool("isIdle", true);
+            }
+            return;
+        }
         if (isOwned)
         {
             if (Vector3.Distance(_player.transform.position, transform.position) > playerStoppingDistance)
@@ -231,12 +258,16 @@ public class Pokemon : MonoBehaviour
                 if (_player.transform.position == _agent.destination || !_agent.isOnNavMesh) return;
                 _agent.SetDestination(_player.transform.position);
             }
-            else if(animator.enabled)
+            else if(animator == null || animator.enabled)
             {
                 _agent.ResetPath();
                 animationState = pokemonAnimState.Idle;
-                animator.SetBool("isWalking", false);
-                animator.SetBool("isIdle", true);
+                if(animator != null)
+                {
+                    animator.SetBool("isWalking", false);
+                    animator.SetBool("isIdle", true);
+                }
+                
             }
         }
         else
@@ -244,8 +275,12 @@ public class Pokemon : MonoBehaviour
             if (!_agent.hasPath)
             { 
                 animationState = pokemonAnimState.Idle;
-                animator.SetBool("isWalking", false);
-                animator.SetBool("isIdle", true);
+                if(animator != null)
+                {
+                    animator.SetBool("isWalking", false);
+                    animator.SetBool("isIdle", true);
+                }
+                
                 _timer = Time.time + Random.Range(walkInterval.x, walkInterval.y);
             }
         }
@@ -257,9 +292,11 @@ public class Pokemon : MonoBehaviour
             animationState = pokemonAnimState.EndlessIdle;
         else 
             animationState = pokemonAnimState.Idle;
-
-        animator.SetBool("isIdle", true);
-        animator.SetBool("isWalking", false);
+        if(animator != null)
+        {
+            animator.SetBool("isIdle", true);
+            animator.SetBool("isWalking", false);
+        }
     }
     public void ResetBones()
     {
@@ -277,8 +314,12 @@ public class Pokemon : MonoBehaviour
         {
             animationState = pokemonAnimState.InBattle;
             _agent.enabled = false;
-            animator.SetBool("isIdle", true);
-            animator.SetBool("isWalking", false);
+            if(animator != null)
+            {
+                animator.SetBool("isIdle", true);
+                animator.SetBool("isWalking", false);
+            }
+            
         }
         else if(gameObject.activeSelf)
         {

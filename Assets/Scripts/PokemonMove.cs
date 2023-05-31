@@ -14,7 +14,9 @@ public enum PokemonMoveEnum
     Scratch,
     Revenge,
     LowKick,
-    Leer
+    Leer,
+    StringShot,
+    DefenseCurl
 }
 
 public enum MoveEffects
@@ -249,6 +251,30 @@ public class Revenge : PokemonMove
     public override PokemonType Type { get { return PokemonType.Fighting; } }
     public override int Power { get { return 60; } }
     public override int PP { get { return 10; } }
+    public override int CurrentPP { get; set; }
+    public override int Accuracay { get { return 100; } }
+}
+
+public class StringShot : PokemonMove
+{
+    public override string Name { get { return "StringShot"; } }
+    public override string DisplayName { get { return "String Shot"; } }
+    public override MoveCategory Category { get { return MoveCategory.Status; } }
+    public override Status Status { get { return new Status(MoveEffects.Defense, -1); } }
+    public override PokemonType Type { get { return PokemonType.Bug; } }
+    public override int PP { get { return 40; } }
+    public override int CurrentPP { get; set; }
+    public override int Accuracay { get { return 100; } }
+}
+
+public class DefenseCurl : PokemonMove
+{
+    public override string Name { get { return "DefenseCurl"; } }
+    public override string DisplayName { get { return "Defense Curl"; } }
+    public override MoveCategory Category { get { return MoveCategory.Status; } }
+    public override Status Status { get { return new Status(MoveEffects.Defense, 1); } }
+    public override PokemonType Type { get { return PokemonType.Normal; } }
+    public override int PP { get { return 40; } }
     public override int CurrentPP { get; set; }
     public override int Accuracay { get { return 100; } }
 }

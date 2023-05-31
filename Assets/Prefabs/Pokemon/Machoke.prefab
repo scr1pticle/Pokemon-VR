@@ -1703,7 +1703,7 @@ NavMeshAgent:
   m_AutoBraking: 1
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.06
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &6438924347588709267
@@ -1780,6 +1780,9 @@ MonoBehaviour:
   OnRetrieve:
     m_PersistentCalls:
       m_Calls: []
+  OnRelease:
+    m_PersistentCalls:
+      m_Calls: []
   OnDeath:
     m_PersistentCalls:
       m_Calls: []
@@ -1787,7 +1790,8 @@ MonoBehaviour:
   expScale: {fileID: 6438924347320502731}
   isCatchable: 0
   lvlText: {fileID: 1542289424921149374}
-  animator: {fileID: 0}
+  animator: {fileID: 590308267462417454}
+  alwaysIdle: 0
   animationState: 0
 --- !u!82 &8312051267190921054
 AudioSource:

@@ -208,8 +208,14 @@ public class BattleSystem : MonoBehaviour
         PokemonMove move = possibleMoves[Random.Range(0, possibleMoves.Count)];
         move.CurrentPP--;
         dialogueText.text = $"{enemy.name} used {move.Name}";
-        if (move.Category == MoveCategory.Physical)
+        if (move.Category == MoveCategory.Physical && enemy.animator != null)
+        {
             enemy.animator.SetTrigger("PhysAttack");
+        }
+        else if (move.Category == MoveCategory.Physical)
+        {
+            enemy.Hit();
+        }
         yield return new WaitForSeconds(timeBetweenDialogues);
         if (move.Category == MoveCategory.Physical)
         {
@@ -255,9 +261,13 @@ public class BattleSystem : MonoBehaviour
         var ally = _allyPokemon.GetComponent<Pokemon>();
         var enemy = _enemyPokemon.GetComponent<Pokemon>();
         dialogueText.text = $"{ally.name} used {move.Name}";
-        if (move.Category == MoveCategory.Physical)
+        if (move.Category == MoveCategory.Physical && ally.animator != null)
         {
             ally.animator.SetTrigger("PhysAttack");
+        }
+        else if(move.Category == MoveCategory.Physical)
+        {
+            ally.Hit();
         }
             
         move.CurrentPP--;
