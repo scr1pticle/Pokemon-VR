@@ -7,6 +7,8 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class Professor : MonoBehaviour
 {
+    public bool Debug = false;
+
     public Pokeball startPokeball;
     public GameObject pokeballPrefab;
     public List<GameObject> pokemonPbs;
@@ -37,6 +39,17 @@ public class Professor : MonoBehaviour
         dialogueBox.SetActive(false);
         clickToContinue.SetActive(false);
         _animator = GetComponent<Animator>();
+    }
+
+    private void Start()
+    {
+        if (!Debug) return;
+        Destroy(tutorialBounds);
+        Destroy(dialogueBox);
+        SpawnPokemons();
+        PokemonManager.inst.SpawnPokemons();
+        enabled = false;
+        GetComponent<XRSimpleInteractable>().enabled = false;
     }
     public void StartTutorial()
     {
@@ -136,7 +149,6 @@ public class Professor : MonoBehaviour
 
     private void SpawnPokemons()
     {
-
         for (int i = 0; i < 3; i++)
         {
             var pokeball = Instantiate(pokeballPrefab, spawnPoints[i].position, spawnPoints[i].rotation).GetComponent<Pokeball>();
@@ -144,7 +156,7 @@ public class Professor : MonoBehaviour
             pokeball.GetContainedPokemon().GetComponent<Pokemon>().alwaysIdle = true;
             pokeball.GetContainedPokemon().GetComponent<Pokemon>().isCatchable = true;
             startingPokemons.Add(pokeball.GetContainedPokemon());
-            startingPokemons[i].GetComponent<Pokemon>().OnCapture.AddListener(delegate { caught = true; pokeball.GetContainedPokemon().GetComponent<Pokemon>().alwaysIdle = false;startPokeball.GetComponent<RespawnWhenDropped>().enabled = false; StartCoroutine(DespawnPokemons()); });
+            startingPokemons[i].GetComponent<Pokemon>().OnCapture.AddListener(delegate { caught = true; pokeball.GetContainedPokemon().GetComponent<Pokemon>().alwaysIdle = false; startPokeball.GetComponent<RespawnWhenDropped>().enabled = false; StartCoroutine(DespawnPokemons()); });
         }
     }
 
@@ -152,7 +164,7 @@ public class Professor : MonoBehaviour
     {
         startingPokemons.Remove(startPokeball.GetContainedPokemon());
         float current = 1;
-        while(current > 0)
+        while (current > 0)
         {
             current = Mathf.MoveTowards(current, 0, 2 * Time.deltaTime);
             foreach (var item in startingPokemons)

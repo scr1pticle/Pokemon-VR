@@ -126,7 +126,7 @@ public class Pokeball : MonoBehaviour
         containedPokemon.transform.localScale = Vector3.zero;
         containedPokemon.GetComponent<Pokemon>().trainerOwner = trainer;
         containedPokemon.SetActive(false);
-       
+
     }
 
     public void RetrievePokemon()
@@ -180,8 +180,8 @@ public class Pokeball : MonoBehaviour
         {
             if (collision.transform.CompareTag("Ground"))
             {
-                if(!instaCatch)
-                active = false;
+                if (!instaCatch)
+                    active = false;
                 if (containedPokemon != null)
                 {
                     int a = CalculateA();
@@ -196,7 +196,7 @@ public class Pokeball : MonoBehaviour
                         StartCoroutine(Shake(a));
                     }
                 }
-                else if(!instaCatch)
+                else if (!instaCatch)
                 {
                     StartCoroutine(SelfDestruct());
                 }
@@ -205,9 +205,9 @@ public class Pokeball : MonoBehaviour
             {
                 pokemon = collision.transform.root.GetComponent<Pokemon>().gameObject;
                 if (pokemon.GetComponent<Pokemon>().isOwned)
-                { 
-                    pokemon = null; 
-                    return; 
+                {
+                    pokemon = null;
+                    return;
                 }
                 if ((!pokemon.GetComponent<Pokemon>().inBattle && pokemon.GetComponent<Pokemon>().isCatchable) || (BattleSystem.inst.GetState() == BattleState.PlayerTurn && !pokemon.GetComponent<Pokemon>().isCatchable))
                 {
@@ -225,7 +225,7 @@ public class Pokeball : MonoBehaviour
         {
             if (collision.transform.CompareTag("Ground") && !inSlot)
             {
-                if(containedPokemon.GetComponent<Health>().GetHealth() <= 0 && containedPokemon.GetComponent<Pokemon>().isOwned)
+                if (containedPokemon.GetComponent<Health>().GetHealth() <= 0 && containedPokemon.GetComponent<Pokemon>().isOwned)
                 {
                     foreach (var item in Inventory.inst.GetSlots())
                     {
@@ -237,7 +237,7 @@ public class Pokeball : MonoBehaviour
                         }
                     }
                 }
-                
+
                 var pokemonInRange = Physics.OverlapSphere(transform.position, battleStartRadius);
                 DebugExtension.DebugWireSphere(transform.position, battleStartRadius, 10);
                 if (pokemonInRange.Length > 0)
@@ -249,7 +249,7 @@ public class Pokeball : MonoBehaviour
                         {
                             if (!item.transform.CompareTag("Pokemon")) continue;
                             if (item.transform.root.GetComponent<Pokemon>() == null) continue;
-                            if (item.transform.root.transform == containedPokemon.transform) continue;  
+                            if (item.transform.root.transform == containedPokemon.transform) continue;
                             var distance = Vector3.Distance(transform.position, item.transform.position);
                             if (distance < closestDistance)
                             {
@@ -266,7 +266,6 @@ public class Pokeball : MonoBehaviour
                         }
                     } while (false);
                 }
-                print("releasing");
                 StartCoroutine(ReleasePokemon());
             }
         }
@@ -289,9 +288,9 @@ public class Pokeball : MonoBehaviour
         interactable.enabled = false;
         yield return new WaitForSeconds(5);
         var current = 1f;
-        while(current > 0) 
+        while (current > 0)
         {
-            current = Mathf.MoveTowards(current, 0, 2*Time.deltaTime);
+            current = Mathf.MoveTowards(current, 0, 2 * Time.deltaTime);
             transform.localScale = new Vector3(current, current, current);
             yield return null;
         }
@@ -310,7 +309,7 @@ public class Pokeball : MonoBehaviour
         {
             return false;
         }
-        else 
+        else
         {
             return true;
         }
@@ -385,13 +384,13 @@ public class Pokeball : MonoBehaviour
             current = Mathf.MoveTowards(current, 1, pokemonCaptureSpeed * Time.deltaTime);
             pokemon.transform.position = Vector3.Lerp(startPos, transform.position, current);
             pokemon.transform.localScale = Vector3.Lerp(startPokemonScale, Vector3.zero, current);
-            if(!retrieve)
+            if (!retrieve)
                 pokeballTop.transform.localRotation = Quaternion.Lerp(Quaternion.Euler(-75, 0, 0), Quaternion.identity, current);
             laser.SetPosition(1, pokemon.transform.position);
             laser.SetPosition(0, transform.position);
             yield return null;
         }
-        
+
         laser.enabled = false;
         pokemon.transform.parent = transform;
         pokemon.transform.localPosition = Vector3.zero;
@@ -418,12 +417,11 @@ public class Pokeball : MonoBehaviour
 
     private IEnumerator ReleasePokemon()
     {
-        print("called release");
         _audio.PlayOneShot(pokemonBreakFree);
         containedPokemon.transform.parent = null;
         containedPokemon.GetComponent<Pokemon>().OnRelease.Invoke();
         transform.GetComponent<Collider>().enabled = false;
-        if(Physics.Raycast(containedPokemon.transform.position, Vector3.down, out var hit))
+        if (Physics.Raycast(containedPokemon.transform.position, Vector3.down, out var hit))
         {
             if (hit.transform.CompareTag("Ground"))
             {
@@ -450,7 +448,7 @@ public class Pokeball : MonoBehaviour
             containedPokemon.transform.localScale = Vector3.Lerp(Vector3.zero, startPokemonScale, current);
             yield return null;
         }
-        if(containedPokemon.GetComponent<Pokemon>().animator != null) 
+        if (containedPokemon.GetComponent<Pokemon>().animator != null)
         {
             containedPokemon.GetComponent<Animator>().enabled = true;
         }

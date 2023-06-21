@@ -162,9 +162,9 @@ public class Pokemon : MonoBehaviour
             moves[i].CurrentPP = moves[i].PP;
         }
         _level = startLevel;
-        lvlText.text =  $"Lvl {_level}";
+        lvlText.text = $"Lvl {_level}";
         nextLevelExp = 6;
-        
+
         CalculateStats();
     }
 
@@ -186,7 +186,7 @@ public class Pokemon : MonoBehaviour
 
     private void Update()
     {
-        if(animator == null)
+        if (animator == null)
         {
             switch (animationState)
             {
@@ -207,12 +207,11 @@ public class Pokemon : MonoBehaviour
         if (alwaysIdle) return;
         if (isOwned)
         {
-            print("yes");
             if (Vector3.Distance(transform.position, _player.transform.position) > playerFollowDistance && !_agent.hasPath)
             {
                 if (!_agent.isOnNavMesh) return;
                 animationState = pokemonAnimState.Walking;
-                if(animator != null)
+                if (animator != null)
                 {
                     animator.SetBool("isIdle", false);
                     animator.SetBool("isWalking", true);
@@ -222,16 +221,16 @@ public class Pokemon : MonoBehaviour
         }
         else
         {
-            if(Time.time >= _timer)
+            if (Time.time >= _timer)
             {
                 if (!_agent.isOnNavMesh) return;
                 animationState = pokemonAnimState.Walking;
-                if(animator != null)
+                if (animator != null)
                 {
                     animator.SetBool("isIdle", false);
                     animator.SetBool("isWalking", true);
                 }
-                
+
                 do
                 {
                     _agent.SetDestination(new Vector3(transform.position.x + Random.Range(-2, 2), 0, transform.position.z + Random.Range(-2, 2)));
@@ -242,9 +241,10 @@ public class Pokemon : MonoBehaviour
     }
     private void Walking()
     {
-        if (alwaysIdle) {
+        if (alwaysIdle)
+        {
             animationState = pokemonAnimState.Idle;
-            if(animator != null)
+            if (animator != null)
             {
                 animator.SetBool("isWalking", false);
                 animator.SetBool("isIdle", true);
@@ -258,29 +258,29 @@ public class Pokemon : MonoBehaviour
                 if (_player.transform.position == _agent.destination || !_agent.isOnNavMesh) return;
                 _agent.SetDestination(_player.transform.position);
             }
-            else if(animator == null || animator.enabled)
+            else if (animator == null || animator.enabled)
             {
                 _agent.ResetPath();
                 animationState = pokemonAnimState.Idle;
-                if(animator != null)
+                if (animator != null)
                 {
                     animator.SetBool("isWalking", false);
                     animator.SetBool("isIdle", true);
                 }
-                
+
             }
         }
         else
         {
             if (!_agent.hasPath)
-            { 
+            {
                 animationState = pokemonAnimState.Idle;
-                if(animator != null)
+                if (animator != null)
                 {
                     animator.SetBool("isWalking", false);
                     animator.SetBool("isIdle", true);
                 }
-                
+
                 _timer = Time.time + Random.Range(walkInterval.x, walkInterval.y);
             }
         }
@@ -288,11 +288,11 @@ public class Pokemon : MonoBehaviour
     public void SetIdleAnimation(bool state = true)
     {
         _agent.enabled = !state;
-        if(state)
+        if (state)
             animationState = pokemonAnimState.EndlessIdle;
-        else 
+        else
             animationState = pokemonAnimState.Idle;
-        if(animator != null)
+        if (animator != null)
         {
             animator.SetBool("isIdle", true);
             animator.SetBool("isWalking", false);
@@ -314,14 +314,14 @@ public class Pokemon : MonoBehaviour
         {
             animationState = pokemonAnimState.InBattle;
             _agent.enabled = false;
-            if(animator != null)
+            if (animator != null)
             {
                 animator.SetBool("isIdle", true);
                 animator.SetBool("isWalking", false);
             }
-            
+
         }
-        else if(gameObject.activeSelf)
+        else if (gameObject.activeSelf)
         {
             animationState = pokemonAnimState.Idle;
             _agent.enabled = true;
@@ -330,11 +330,11 @@ public class Pokemon : MonoBehaviour
     }
     public void CalculateStats()
     {
-        
+
         foreach (var item in (Stat[])Enum.GetValues(typeof(Stat)))
         {
             int e = Mathf.FloorToInt(Mathf.Min(255, Mathf.Ceil(Mathf.Sqrt(EVs[item]))) / 4);
-            if(item != Stat.hp)
+            if (item != Stat.hp)
                 Stats[item] = Mathf.FloorToInt((2 * baseStats[item] + IVs[item] + e) * _level / 100 + 5);
             else
                 Stats[item] = Mathf.FloorToInt((2 * baseStats[item] + IVs[item] + e) * _level / 100 + _level + 10);
@@ -368,9 +368,9 @@ public class Pokemon : MonoBehaviour
 
     public void GetXP(int exp)
     {
-        
+
         this.exp += exp;
-        while(this.exp >= nextLevelExp)
+        while (this.exp >= nextLevelExp)
         {
             _level++;
             nextLevelExp = Mathf.CeilToInt(4f * (Mathf.Pow(_level, 3) / 5f));
@@ -383,16 +383,16 @@ public class Pokemon : MonoBehaviour
     public void SetLevel(int level)
     {
         _level = level;
-        exp = Mathf.CeilToInt(4f * (Mathf.Pow(_level-1, 3) / 5f));
+        exp = Mathf.CeilToInt(4f * (Mathf.Pow(_level - 1, 3) / 5f));
         nextLevelExp = Mathf.CeilToInt(4f * (Mathf.Pow(_level, 3) / 5f));
         UpdateLevel();
         CalculateStats();
     }
-    
+
     private void UpdateLevel()
     {
         lvlText.text = $"Lvl {_level}";
-        expScale.transform.localScale = new Vector3(Mathf.Clamp01((float)exp/nextLevelExp), 1, 1);
+        expScale.transform.localScale = new Vector3(Mathf.Clamp01((float)exp / nextLevelExp), 1, 1);
     }
     public List<PokemonMove> GetMoves()
     {

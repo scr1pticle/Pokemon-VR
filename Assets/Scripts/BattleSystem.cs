@@ -53,12 +53,12 @@ public class BattleSystem : MonoBehaviour
     private GameObject _enemyPokemon;
 
 
-    private Dictionary<int, string> stageChangeLookup = new() { 
-        { -6, "Pokemon's stat severely fell!" }, 
-        { -5, "Pokemon's stat severely fell!" }, 
-        { -4, "Pokemon's stat severely fell!" }, 
-        { -3, "Pokemon's stat severely fell!" }, 
-        { -2, "Pokemon's stat greatly fell!" }, 
+    private Dictionary<int, string> stageChangeLookup = new() {
+        { -6, "Pokemon's stat severely fell!" },
+        { -5, "Pokemon's stat severely fell!" },
+        { -4, "Pokemon's stat severely fell!" },
+        { -3, "Pokemon's stat severely fell!" },
+        { -2, "Pokemon's stat greatly fell!" },
         { -1, "Pokemon's stat fell!" },
         { 1, "Pokemon's stat rose!" },
         { 2, "Pokemon's stat greatly rose!" },
@@ -100,7 +100,6 @@ public class BattleSystem : MonoBehaviour
     private void Update()
     {
         if (_enemyPokemon == null) return;
-        print(_enemyPokemon.GetComponent<Pokemon>().name + ": " + _enemyPokemon.GetComponent<Health>().GetHealth());
     }
 
     private void Run()
@@ -117,18 +116,20 @@ public class BattleSystem : MonoBehaviour
         _allyPokemon = allyPokemon;
         _enemyPokemon = enemyPokemon;
         _allyPokemon.GetComponent<Health>().OnFaint.AddListener(delegate { StartCoroutine(AllyFaint()); });
-        _allyPokemon.GetComponent<Pokemon>().OnHit.AddListener(delegate {
+        _allyPokemon.GetComponent<Pokemon>().OnHit.AddListener(delegate
+        {
             _enemyPokemon.GetComponent<AudioSource>().PlayOneShot(hitSounds[Random.Range(0, hitSounds.Count)]);
             _enemyPokemon.GetComponent<Pokemon>().hitParticleSystem.Play();
         });
-        _enemyPokemon.GetComponent<Pokemon>().OnHit.AddListener(delegate {
+        _enemyPokemon.GetComponent<Pokemon>().OnHit.AddListener(delegate
+        {
             _allyPokemon.GetComponent<AudioSource>().PlayOneShot(hitSounds[Random.Range(0, hitSounds.Count)]);
             _allyPokemon.GetComponent<Pokemon>().hitParticleSystem.Play();
         });
         _enemyPokemon.GetComponent<Health>().OnFaint.AddListener(delegate { StartCoroutine(EnemyFaint()); });
         _enemyPokemon.GetComponent<Pokemon>().OnCaptureAttempt.AddListener(CaptureAttempt);
         _enemyPokemon.GetComponent<Pokemon>().OnCapture.AddListener(Capture);
-        _enemyPokemon.GetComponent<Pokemon>().OnBreakFree.AddListener(delegate(int count) { StartCoroutine(BreakFree(count)); });
+        _enemyPokemon.GetComponent<Pokemon>().OnBreakFree.AddListener(delegate (int count) { StartCoroutine(BreakFree(count)); });
         allyPokemon.GetComponent<Pokemon>().inBattle = true;
         state = BattleState.Start;
         BattlePrep();
@@ -170,7 +171,7 @@ public class BattleSystem : MonoBehaviour
             var button = Instantiate(buttonPrefab, moveParent);
             button.GetComponent<MoveButton>().nameText.text = item.Name;
             button.GetComponent<MoveButton>().ppText.text = $"{item.PP}/{item.PP}";
-            button.GetComponent<Button>().onClick.AddListener(delegate{StartCoroutine(UseMove(item, button.GetComponent<Button>()));});
+            button.GetComponent<Button>().onClick.AddListener(delegate { StartCoroutine(UseMove(item, button.GetComponent<Button>())); });
             id++;
         }
         state = BattleState.PlayerTurn;
@@ -180,7 +181,7 @@ public class BattleSystem : MonoBehaviour
 
     private void PlayerTurn()
     {
-        if(_allyPokemon != null && _allyPokemon.GetComponent<Health>().GetHealth() > 0)
+        if (_allyPokemon != null && _allyPokemon.GetComponent<Health>().GetHealth() > 0)
         {
             moveParent.gameObject.SetActive(true);
             dialogueText.text = $"What will {_allyPokemon.GetComponent<Pokemon>().name} do?";
@@ -203,7 +204,7 @@ public class BattleSystem : MonoBehaviour
         List<PokemonMove> possibleMoves = enemy.GetMoves();
         foreach (var item in enemy.GetMoves())
         {
-            if(item.CurrentPP <= 0) possibleMoves.Remove(item);
+            if (item.CurrentPP <= 0) possibleMoves.Remove(item);
         }
         PokemonMove move = possibleMoves[Random.Range(0, possibleMoves.Count)];
         move.CurrentPP--;
@@ -233,9 +234,9 @@ public class BattleSystem : MonoBehaviour
                 {
                     _enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat] += move.Status.stageChange;
                     _enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat] = Mathf.Clamp(_enemyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
-                    dialogue = Regex.Replace(dialogue, @"Pokemon", _enemyPokemon.GetComponent<Pokemon>().name); 
+                    dialogue = Regex.Replace(dialogue, @"Pokemon", _enemyPokemon.GetComponent<Pokemon>().name);
                 }
-                else 
+                else
                 {
                     _allyPokemon.GetComponent<Pokemon>().Stages[affectedStat] += move.Status.stageChange;
                     _allyPokemon.GetComponent<Pokemon>().Stages[affectedStat] = Mathf.Clamp(_allyPokemon.GetComponent<Pokemon>().Stages[affectedStat], -6, 6);
@@ -265,11 +266,11 @@ public class BattleSystem : MonoBehaviour
         {
             ally.animator.SetTrigger("PhysAttack");
         }
-        else if(move.Category == MoveCategory.Physical)
+        else if (move.Category == MoveCategory.Physical)
         {
             ally.Hit();
         }
-            
+
         move.CurrentPP--;
         if (move.CurrentPP <= 0) button.interactable = false;
         button.gameObject.GetComponent<MoveButton>().ppText.text = $"{move.CurrentPP}/{move.PP}";
@@ -281,7 +282,7 @@ public class BattleSystem : MonoBehaviour
             _enemyPokemon.GetComponent<Health>().TakeDamage(damage);
             dialogueText.text = $"Move succesfull! {enemy.name} took {damage} damage!";
         }
-        else if(move.Category == MoveCategory.Status)
+        else if (move.Category == MoveCategory.Status)
         {
             if (move.Status.effect == MoveEffects.Attack || move.Status.effect == MoveEffects.Defense || move.Status.effect == MoveEffects.Special)
             {
@@ -309,7 +310,7 @@ public class BattleSystem : MonoBehaviour
                 dialogueText.text = "This move is not yeat implemented";
             }
         }
-        
+
         if (_enemyPokemon.GetComponent<Health>().GetHealth() <= 0) yield break;
         state = BattleState.EnemyTurn;
         StartCoroutine(EnemyTurn());
@@ -317,7 +318,7 @@ public class BattleSystem : MonoBehaviour
 
     private float GetTypeEffectivness(PokemonType ally, PokemonType enemy)
     {
-        if(ally == PokemonType.Normal)
+        if (ally == PokemonType.Normal)
         {
             switch (enemy)
             {
@@ -365,7 +366,7 @@ public class BattleSystem : MonoBehaviour
         _allyPokemon.SetActive(false);
         foreach (var item in Inventory.inst.GetSlots())
         {
-            if(item.itemInSlot == null)
+            if (item.itemInSlot == null)
             {
                 item.InsertItem(pokeball);
                 break;
@@ -388,7 +389,7 @@ public class BattleSystem : MonoBehaviour
         float current = 0;
         _enemyPokemon.GetComponent<Pokemon>().OnDeath.Invoke();
         print("enemy faint");
-        while(current < 1)
+        while (current < 1)
         {
             current = Mathf.MoveTowards(current, 1, faintSpeed * Time.deltaTime);
             _enemyPokemon.transform.localScale = Vector3.Lerp(startScale, Vector3.zero, current);
@@ -414,7 +415,7 @@ public class BattleSystem : MonoBehaviour
             ResetPP(allyPokemon);
             ResetStages(allyPokemon);
         }
-        else if(state == BattleState.Lose)
+        else if (state == BattleState.Lose)
         {
             dialogueText.text = "You lost";
             _allyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
@@ -431,7 +432,7 @@ public class BattleSystem : MonoBehaviour
             ResetStages(enemyPokemon);
             if (enemyPokemon.isOwnedByTrainer) StartCoroutine(PokemonBackToTrainer());
         }
-        else if(state == BattleState.Captured)
+        else if (state == BattleState.Captured)
         {
             _allyPokemon.GetComponent<Health>().OnFaint.RemoveAllListeners();
             allyPokemon.OnHit.RemoveAllListeners();
